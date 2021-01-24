@@ -1,43 +1,48 @@
 package ru.kuper.trickyshop.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kuper.trickyshop.model.Client;
+import ru.kuper.trickyshop.repository.ClientRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
 @Service
 public class ClientService implements IClientService {
 
-    private static final Map<Integer, Client> CLIENT_REPOSITORY_MAP = new HashMap<>();
+    @Autowired
+    private final ClientRepository clientRepository;
 
-    private static final AtomicInteger CLIENT_ID_HOLDER = new AtomicInteger();
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     @Override
     public void create(Client client) {
-        final int clientId = CLIENT_ID_HOLDER.incrementAndGet();
-        client.setId(clientId);
-        CLIENT_REPOSITORY_MAP.put(clientId, client);
+        clientRepository.save(client);
     }
 
     @Override
     public List<Client> readAll() {
-        return new ArrayList<>(CLIENT_REPOSITORY_MAP.values());
+        return clientRepository.findAll();
     }
 
     @Override
     public Client read(int id) {
-        return CLIENT_REPOSITORY_MAP.get(id);
+        Optional<Client> client = clientRepository.findById((long) id);
+        return client.isPresent() ? client.get() : null;
     }
 
     @Override
     public boolean update(Client client, int id) {
-        if (CLIENT_REPOSITORY_MAP.containsKey(id)) {
-            client.setId(id);
-            CLIENT_REPOSITORY_MAP.put(id, client);
+
+        Optional<Client> finded = clientRepository.findById((long) id);
+        if (finded.isPresent()) {
+            Client client1 = finded.get();
+            client1.setName(client.getName());
+            client1.setEmail(client.getEmail());
+            client1.setPhone(client.getPhone());
+            clientRepository.save(client1);
             return true;
         }
         return false;
@@ -45,7 +50,12 @@ public class ClientService implements IClientService {
 
     @Override
     public boolean delete(int id) {
-        return CLIENT_REPOSITORY_MAP.remove(id) != null;
+        Optional<Client> byId = clientRepository.findById((long) id);
+        if (byId.isPresent()) {
+            clientRepository.deleteById((long) id);
+            return true;
+        }
+        return false;
     }
 
 }
