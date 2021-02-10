@@ -104,9 +104,8 @@
         </plugins>
     </build>
 
-
-
     <scm>
+        <connection>scm:git:https://github.com/ikupdev/tricky-shop</connection>
         <developerConnection>scm:git:https://github.com/ikupdev/tricky-shop</developerConnection>
       <tag>tricky-shop-0.0.1</tag>
   </scm>
