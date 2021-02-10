@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kuper.trickyshop.feign.JSONPlaceholderClient;
 import ru.kuper.trickyshop.model.Client;
+import ru.kuper.trickyshop.model.Post;
 import ru.kuper.trickyshop.service.IClientService;
 
 import java.util.List;
@@ -14,9 +16,12 @@ public class ClientController {
 
     private final IClientService clientService;
 
+    private final JSONPlaceholderClient client;
+
     @Autowired
-    public ClientController(IClientService clientService) {
+    public ClientController(IClientService clientService, JSONPlaceholderClient client) {
         this.clientService = clientService;
+        this.client = client;
     }
 
     @PostMapping(value = "/clients")
@@ -58,4 +63,16 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @RequestMapping(value = "/info")
+    public ResponseEntity<?> info() {
+        List<Post> posts = client.getPosts();
+        if (!posts.isEmpty()) {
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
+
+
