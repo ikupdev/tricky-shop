@@ -9,7 +9,7 @@
     </parent>
     <groupId>ru.kuper</groupId>
     <artifactId>tricky-shop</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>tricky-shop</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -107,7 +107,7 @@
     <scm>
         <connection>scm:git:https://github.com/ikupdev/tricky-shop</connection>
         <developerConnection>scm:git:https://github.com/ikupdev/tricky-shop</developerConnection>
-      <tag>tricky-shop-0.0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
 </project>
